@@ -14,13 +14,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.calculatorController">
    <center>
       <SplitPane dividerPositions="0.46321070234113715" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
             <VBox alignment="CENTER" prefHeight="398.0" prefWidth="255.0">
                <children>
-                  <TextField fx:id="calcInput" alignment="CENTER" onAction="#parse" prefHeight="93.0" prefWidth="232.0" promptText="Enter Calculation" VBox.vgrow="ALWAYS">
+                  <TextField fx:id="calcIn" alignment="CENTER" onAction="#parse" prefHeight="93.0" prefWidth="232.0" promptText="Enter Calculation" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -54,7 +54,7 @@
                      </children>
                   </GridPane>
                   <Pane prefHeight="68.0" prefWidth="232.0" VBox.vgrow="ALWAYS" />
-                  <TextField alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0" promptText="Result" VBox.vgrow="ALWAYS">
+                  <TextField fx:id="calcOut" alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0" promptText="Result" VBox.vgrow="ALWAYS">
                      <font>
                         <Font size="32.0" />
                      </font>
