@@ -36,7 +36,7 @@ public class calculatorController {
     //Parses the input calculation
     public void parse()  throws EmptyStackException{
 
-        textInput = calcIn.getText();
+        rpn = new ArrayList<>();
 
         //Splitting the calculation into single chars
         charArray = calcIn.getText().split("");
@@ -52,7 +52,7 @@ public class calculatorController {
                 //Adds char to stack if valid
                 //While loop checks to see if the operator can be added to the stack or if
                 //Stuff needs to be removed from the stack first
-                while (!(stack.empty()) && !(operators.get(c) > operators.get(stack.peek()))) {
+                while (!(stack.empty()) && !(operators.get(c) > operators.get(stack.peek())) && !stack.peek().equals("(")) {
                     System.out.println("CANNOT ADD TO STACK");
                     rpn.add(stack.pop());
                 }
@@ -65,6 +65,7 @@ public class calculatorController {
                 while (!stack.empty() && !stack.peek().equals("(")){
                     rpn.add(stack.pop());
                 }
+                stack.pop(); //Removes the '('
             } else {
                 rpn.add(c);
             }
@@ -76,8 +77,6 @@ public class calculatorController {
 
         System.out.println("Printing rpn");
         System.out.println(rpn);
-
-
 
         calcOut.setText(textInput);
 
