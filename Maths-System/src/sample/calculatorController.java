@@ -5,80 +5,130 @@ import javafx.fxml.FXML;
 
 import javafx.scene.control.TextField;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.HashMap;
 import java.util.Stack;
+
+import static sample.Lexer.*;
 
 public class calculatorController {
 
-    ArrayList<String> rpn = new ArrayList<>();
-    String textInput;
-    String[] charArray;
-    Stack<String> stack = new Stack<String>();
+    Stack<Float> rpn = new Stack<>();
+    Stack<Integer> opStack = new Stack<>();
 
-    HashMap<String, Integer> operators = new HashMap<String,Integer>(){{
-        put("=",0);
-        put("+",1);
-        put("-",1);
-        put("*",2);
-        put("/",2);
-        put("^",3);
-        put("(",4);
-    }};
+    Integer opID;
+    Float op1, op2, op3;
+
+    Float result;
 
     @FXML
     private TextField calcIn;
     @FXML
     private TextField calcOut;
 
+    public void parse(){
+        String expression = calcIn.getText();
 
-    //Parses the input calculation
-    public void parse()  throws EmptyStackException{
+        Parse parser = new Parse();
+        parser.lexer(expression);
 
-        rpn = new ArrayList<>();
+        int NR_tokens = parser.NR_tokens;
+        int[] Tokens = parser.Tokens;
+        int[] SymbolTable = parser.SymbolTable;
 
-        //Splitting the calculation into single chars
-        charArray = calcIn.getText().split("");
 
-        //Loops through each char in calculation
-        for (String c : charArray){
-            System.out.println(c);
+        if (parser.parse() == 1){
+            System.out.println("PARSING SUCCESSFUL");
+            shuntYard(NR_tokens, Tokens, SymbolTable);
+        } else{
+            System.out.println("PARSING FAILED");
+        }
+    }
 
-            //If char is operator
-            if (operators.containsKey(c)){
-                System.out.println("IS OPERATOR");
+    public void calculate(){
+        opID = opStack.pop();
+        op2 = rpn.pop();
+        op1 = rpn.pop();
 
-                //Adds char to stack if valid
-                //While loop checks to see if the operator can be added to the stack or if
-                //Stuff needs to be removed from the stack first
-                while (!(stack.empty()) && !(operators.get(c) > operators.get(stack.peek())) && !stack.peek().equals("(")) {
-                    System.out.println("CANNOT ADD TO STACK");
-                    rpn.add(stack.pop());
-                }
+        System.out.println(op1);
+        System.out.println(op2);
 
-                //Adds operator to stack
-                stack.push(c);
-            }
-            //If the operand is a ')' Then the stack will be popped until the '(' is found.
-            else if (c.equals(")")){
-                while (!stack.empty() && !stack.peek().equals("(")){
-                    rpn.add(stack.pop());
-                }
-                stack.pop(); //Removes the '('
-            } else {
-                rpn.add(c);
-            }
+        switch (opID){
+            case T_DIV:
+                System.out.println("DIVIDE");
+                op3 = (op1 / op2);
+                break;
+            case T_MULTIPLY:
+                System.out.println("MULTIPLY");
+                op3 = (op1 * op2);
+                break;
+            case T_ADD:
+                System.out.println("ADD");
+                op3 = op1 + op2;
+                break;
+            case T_SUBTRACT:
+                System.out.println("SUBTRACT");
+                op3 = (op1 - op2);
+                break;
+            case T_IDENTIFIER: // come back to this
+                System.out.println("IDENTIFIER");
+                op3 = op1;
+                break;
         }
 
-        while(!stack.empty()){
-            rpn.add(stack.pop());
+        System.out.println(op3);
+        rpn.push(op3);
+    }
+
+    //turns the input into Reverse polish notation (postfix)
+    public void shuntYard(int NR_tokens, int[] Tokens, int[] SymbolTable){
+        int count = 0;
+
+
+        while(count < NR_tokens){
+            if (Tokens[count] == T_NUMBER){
+                rpn.push((float) SymbolTable[count]);
+                System.out.println("Number " + rpn.peek() + " added to rpn Stack");
+
+            } else if (Tokens[count] == T_LPAR){ // Token is (
+                opStack.push(Tokens[count]);
+                System.out.println("Operator " + opStack.peek() + " added to opStack");
+
+            } else if (Tokens[count] == T_RPAR){ // Token is )
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
+                    calculate();
+                }
+
+                if (opStack.peek() == T_LPAR){ opStack.pop();}
+
+            } else if (Tokens[count] == T_DIV | Tokens[count] == T_MULTIPLY){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && (opStack.peek() == T_MULTIPLY | opStack.peek() == T_DIV)){
+                    calculate();
+                }
+                opStack.push(Tokens[count]);
+                System.out.println("Operator " + opStack.peek() + " added to opStack");
+
+            } else if(Tokens[count] == T_ADD | Tokens[count] == T_SUBTRACT){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && (opStack.peek() == T_DIV | opStack.peek() == T_MULTIPLY) && (opStack.peek() == T_SUBTRACT | opStack.peek() == T_ADD)){
+                    calculate();
+                }
+                opStack.push(Tokens[count]);
+                System.out.println("Operator " + opStack.peek() + " added to opStack");
+            }
+
+            count++;
         }
 
-        System.out.println("Printing rpn");
-        System.out.println(rpn);
+        while(!opStack.empty()){
+            calculate();
+        }
 
-        calcOut.setText(textInput);
+        result = rpn.pop();
+
+        rpn.empty();
+        opStack.empty();
+
+        System.out.println(result);
+        calcOut.setText(result.toString());
+
 
 
     }

@@ -3,16 +3,16 @@ import java.util.Scanner;
 
 public class Lexer {
 
-    public static int T_LPAR = 1;         // (
-    public static int T_RPAR = 2;         // )
-    public static int T_DIV = 3;          // %
-    public static int T_MULTIPLY = 4;     // *
-    public static int T_ADD = 5;          // +
-    public static int T_SUBTRACT = 6;     // -
-    public static int T_IDENTIFIER = 7;   // [A-Z] | [a-z]
-    public static int T_NUMBER = 8;       // [0-9]
-    public static int T_EQUAL = 9;        //=
-    public static int T_DECIMAL = 10;     // .
+    public static final int T_LPAR = 1;         // (
+    public static final int T_RPAR = 2;         // )
+    public static final int T_DIV = 3;          // %
+    public static final int T_MULTIPLY = 4;     // *
+    public static final int T_ADD = 5;          // +
+    public static final int T_SUBTRACT = 6;     // -
+    public static final int T_IDENTIFIER = 7;   // [A-Z] | [a-z]
+    public static final int T_NUMBER = 8;       // [0-9]
+    public static final int T_EQUAL = 9;        //=
+    public static final int T_DECIMAL = 10;     // .
 
     private static int MAX=64;
     public int NR_tokens;
