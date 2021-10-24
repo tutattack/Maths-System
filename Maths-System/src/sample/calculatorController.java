@@ -18,6 +18,7 @@ public class calculatorController {
     Float op1, op2, op3;
 
     Float result;
+    int roundResult;
 
     @FXML
     private TextField calcIn;
@@ -126,9 +127,16 @@ public class calculatorController {
         rpn.empty();
         opStack.empty();
 
-        System.out.println(result);
-        calcOut.setText(result.toString());
 
+
+        System.out.println(result);
+
+        if (result % 1 == 0){
+            roundResult = (int) ((float) result);
+            calcOut.setText(String.valueOf(roundResult));
+        }else {
+            calcOut.setText(result.toString());
+        }
 
 
     }
