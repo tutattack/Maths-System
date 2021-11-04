@@ -101,14 +101,14 @@ public class calculatorController {
                 if (opStack.peek() == T_LPAR){ opStack.pop();}
 
             } else if (Tokens[count] == T_DIV | Tokens[count] == T_MULTIPLY){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && (opStack.peek() == T_MULTIPLY | opStack.peek() == T_DIV)){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_DIV){
                     calculate();
                 }
                 opStack.push(Tokens[count]);
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
 
             } else if(Tokens[count] == T_ADD | Tokens[count] == T_SUBTRACT){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && (opStack.peek() == T_DIV | opStack.peek() == T_MULTIPLY) && (opStack.peek() == T_SUBTRACT | opStack.peek() == T_ADD)){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_ADD){
                     calculate();
                 }
                 opStack.push(Tokens[count]);
