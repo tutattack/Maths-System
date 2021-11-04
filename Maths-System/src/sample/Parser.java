@@ -1,11 +1,11 @@
-package sample;
-// BNF rules
+package sample;// BNF rules
 // <expr>	::=	<term> <expr'>
 // <expr'>	::= <operator> <term> <expr'> | <empty>
 // <term>	::= <factor> <term'>
 // <term'>	::= <operator> <factor> <term'> | <empty>
 // <factor> ::= number | (<expr>)
-// <operator> ::= <division> | <multiplication> | <add> | <subtract>
+// <operator> ::= <division> | <multiplication> | <add> | <subtract> | <power>
+// <power> ::= ^
 // <division> ::=  ÷
 // <multiplication> ::= *
 // <add> ::= +
@@ -77,7 +77,7 @@ class Parse extends Lexer{
 
     void expression_p(int level){
         System.out.print("expression_p() called at level: "+level+"\n");
-        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT)){
+        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER)){
             advance(level+1);
             term(level+1);
             expression_p(level+1);

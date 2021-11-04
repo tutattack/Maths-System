@@ -1,18 +1,23 @@
 package sample;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Lexer {
 
-    public static final int T_LPAR = 1;         // (
-    public static final int T_RPAR = 2;         // )
-    public static final int T_DIV = 3;          // %
-    public static final int T_MULTIPLY = 4;     // *
-    public static final int T_ADD = 5;          // +
-    public static final int T_SUBTRACT = 6;     // -
-    public static final int T_IDENTIFIER = 7;   // [A-Z] | [a-z]
-    public static final int T_NUMBER = 8;       // [0-9]
-    public static final int T_EQUAL = 9;        //=
-    public static final int T_DECIMAL = 10;     // .
+    public final static int T_LPAR = 1;         // (
+    public final static int T_RPAR = 2;         // )
+    public final static int T_POWER = 3;        // ^
+    public final static int T_DIV = 4;          // %
+    public final static int T_MULTIPLY = 5;     // *
+    public final static int T_ADD = 6;          // +
+    public final static int T_SUBTRACT = 7;     // -
+    public final static int T_IDENTIFIER = 8;   // [A-Z] | [a-z]
+    public final static int T_NUMBER = 9;       // [0-9]
+    public final static int T_EQUAL = 10;        //=
+    public final static int T_DECIMAL = 11;     // .
 
     private static int MAX=64;
     public int NR_tokens;
@@ -70,6 +75,10 @@ public class Lexer {
                     values[counter]=-1;
                     counter++;
                     break;
+                case '^': tokens[counter] = T_POWER;
+                    values[counter]=-1;
+                    counter++;
+                    break;
                 default:
                     if (Character.isDigit(a)){
                         tokens[counter] = T_NUMBER;
@@ -94,10 +103,30 @@ public class Lexer {
                         counter++;
                         break;
                     }
-                    Boolean flag2 = Character.isLetter(a);
-                    if (flag2){
+                    Boolean flag = Character.isLetter(a);
+                    int flag2 = Character.compare(a,'_');
+                    if (flag2==0 || flag){
                         tokens[counter] = T_IDENTIFIER;
-                        values[counter]=a;
+                        num+=a;
+                        if (flag2==0 && !flag){
+                            i++;
+                            if (!Character.isLetter(lexeme[i])){
+                                System.out.print("Invalid identifier" +"\n");
+                                i--;
+                                break;
+                            }
+                        }
+                        while (Character.isLetter(lexeme[i++]) && i<lexeme.length){
+                            if(Character.isLetter(lexeme[i])){
+                                num+=lexeme[i];
+                            }
+                            else{
+                                break;
+                            }
+                        }
+                        values[counter] = 0;
+                        num="";
+                        i--;
                         counter++;
                         break;
                     }
