@@ -24,6 +24,9 @@ public class Lexer {
     public int[] Tokens;
     public int[] SymbolTable;
 
+    public ArrayList<String> identifierList = new ArrayList<>();
+    public int identifierValue;
+
     public int[] lexer(String input){
         char lexeme[] = new char[MAX];
         int tokens[] = new int[MAX];
@@ -108,6 +111,12 @@ public class Lexer {
                     if (flag2==0 || flag){
                         tokens[counter] = T_IDENTIFIER;
                         num+=a;
+
+                        // Without this it does not get the full variable name misses first letter
+                        if (flag2 == 0){
+                            num+= lexeme[i+1];  //Gets the full variable name if it starts with '_'
+                        }
+
                         if (flag2==0 && !flag){
                             i++;
                             if (!Character.isLetter(lexeme[i])){
@@ -124,7 +133,16 @@ public class Lexer {
                                 break;
                             }
                         }
-                        values[counter] = 0;
+
+                        System.out.println(num);
+
+                        if (identifierList.isEmpty() | !identifierList.contains(num)){
+                            identifierList.add(num);
+                        }
+
+                        identifierValue = identifierList.indexOf(num);
+
+                        values[counter] = identifierValue;
                         num="";
                         i--;
                         counter++;
