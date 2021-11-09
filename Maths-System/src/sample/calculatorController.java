@@ -20,11 +20,15 @@ public class calculatorController {
 
     Integer operator;
     Stack<Integer> saveOperator = new Stack<>();
+    Stack<String> saveOperand = new Stack<String>();
     double operand1;
     double operand2;
     double operand3;
 
     String temp;
+
+    int opToken1;
+    int opToken2;
 
     String[] splitOperand;
 
@@ -115,24 +119,74 @@ public class calculatorController {
         }
     }
 
-    public void calculate(Stack<String> rpn, Stack<Integer> rpnTokens){
+    public void calculate(Stack<String> rpn, Stack<Integer> rpnTokens, int operator){
 
-        operator = rpnTokens.pop();
-        System.out.println("operator:"+operator);
-        rpn.pop();
+        System.out.println("Calculate rpn      : "+ rpn);
+        System.out.println("Calculate rpnTokens: "+rpnTokens);
 
-        System.out.println("peek:" + rpnTokens.peek());
-        if (rpnTokens.peek() != 9 && rpnTokens.peek() != 8){
-
-            saveOperator.push(operator);    //Used so operator is not lost on recursive call
-
-            System.out.println("Nesting calculate");
-            calculate(rpn, rpnTokens);
-
-            operator = saveOperator.pop();  //gets the operator from the last call
+        if (operator == 0) {
+            operator = rpnTokens.pop();
+            System.out.println("operator:" + getOperator(operator));
+            rpn.pop();
         }
 
-        if (rpnTokens.pop() == 8 | rpnTokens.pop() == 8){
+        opToken1 = rpnTokens.pop();
+        opToken2 = rpnTokens.pop();
+
+        System.out.println("opTOKEN1 = "+ getOperator(opToken1));
+        System.out.println("opTOKEN2 = "+ getOperator(opToken2));
+
+// currently stuck on this need to make it so that it checks the optokens after coming back from a recursive call
+        //Checks to see if the first  and second operand taken is an operator or not
+        if(opToken1 != 9 && opToken1 != 8) {
+            System.out.println("OPERAND 1 IS AN OPERATOR!");
+
+            rpnTokens.push(opToken2);
+            rpnTokens.push(opToken1);
+
+            //Saving operator
+            saveOperator.push(operator);    //Used so operator is not lost on recursive call
+            System.out.println(getOperator(saveOperator.peek()) + " operator saved!");
+
+            //Recursive call
+            calculate(rpn, rpnTokens,0);
+
+            //Loading operator
+            operator = saveOperator.pop();  //gets the operator from the last call
+            System.out.println("Operator: " + getOperator(operator) + " Loaded");
+
+            System.out.println("Calculate rpn      : "+ rpn);
+            System.out.println("Calculate rpnTokens: "+rpnTokens);
+
+            calculate(rpn, rpnTokens, operator);
+
+        }
+
+        if(opToken2 != 9 && opToken2 != 8){
+            System.out.println("OPERAND 2 IS AN OPERATOR!");
+
+            rpnTokens.push(opToken2);
+
+            //Saving Operator
+            saveOperator.push(operator);    //Used so operator is not lost on recursive call
+            System.out.println(getOperator(saveOperator.peek()) + " operator saved!");
+
+            //Saving operand
+            saveOperand.push(rpn.pop());
+            System.out.println(saveOperand.peek()+" Operand Saved!");
+
+            //Recursive call
+            calculate(rpn, rpnTokens, 0);
+
+            //Loading operator and operand
+            operator = saveOperator.pop();  //gets the operator from the last call
+            rpn.push(saveOperand.pop());    //gets the operand from the last call
+
+            calculate(rpn, rpnTokens, operator);
+        }
+
+        //Checks if any operand is a identifier and deals with it differently
+        if (opToken1 == 8 | opToken2 == 8){
             System.out.println("Identifier");
             String operand1 = rpn.pop();
             String operand2 = rpn.pop();
@@ -191,33 +245,39 @@ public class calculatorController {
             return;
         }
 
-        operand1 = Integer.parseInt(rpn.pop());
-        operand2 = Integer.parseInt(rpn.pop());
+        //Converts the operands into doubles
+        operand2 = Double.parseDouble(rpn.pop());
+        operand1 = Double.parseDouble(rpn.pop());
 
 
-        System.out.println("op1"+operand1);
-        System.out.println("op2"+operand2);
+        System.out.println("op1: "+operand1);
+        System.out.println("op2: "+operand2);
 
         switch (operator){
             case T_ADD:
-                System.out.println(operand1 + "+" + operand2);
                 operand3 = operand1 + operand2;
+                System.out.println(operand1 + " + " + operand2 + " = " + operand3);
+
                 break;
             case T_SUBTRACT:
-                System.out.println(operand1 + "-" + operand2);
                 operand3 = operand1 - operand2;
+                System.out.println(operand1 + " - " + operand2 + " = " + operand3);
+
                 break;
             case T_MULTIPLY:
-                System.out.println(operand1 + "*" + operand2);
                 operand3 = operand1 * operand2;
+                System.out.println(operand1 + " * " + operand2 + " = " + operand3);
+
                 break;
             case T_DIV:
-                System.out.println(operand1 + "/" + operand2);
                 operand3 = operand1 / operand2;
+                System.out.println(operand1 + " / " + operand2 + " = " + operand3);
+
                 break;
             case T_POWER:
-                System.out.println(operand1 + "^" + operand2);
-                operand3 = Math.pow(operand1, operand2);
+                operand3 = Math.pow(operand2, operand1);
+                System.out.println(operand1 + " ^ " + operand2 + " = " + operand3);
+
                 break;
         }
 
@@ -228,27 +288,25 @@ public class calculatorController {
     public String getOperator(int op){
         switch (op){
             case T_DIV:
-                System.out.println("DIVIDE");
                 return "/";
 
             case T_MULTIPLY:
-                System.out.println("MULTIPLY");
                 return "*";
 
             case T_ADD:
-                System.out.println("ADD");
                 return "+";
 
             case T_SUBTRACT:
-                System.out.println("SUBTRACT");
                 return "-";
 
             case T_POWER:
-                System.out.println("POWER");
                 return "^";
-        }
+            case T_NUMBER:
+                return "IS NUMBER";
+            default:
+                return String.valueOf(op);
 
-        return "";
+        }
     }
 
     //used to find if a string is a number
@@ -270,6 +328,9 @@ public class calculatorController {
     //turns the input into Reverse polish notation (postfix)
     public void shuntYard(int NR_tokens, int[] Tokens, int[] SymbolTable, ArrayList<String> identifierList){
         int count = 0;
+
+        rpn.clear();
+        rpnTokens.clear();
 
         String identifier;
 
@@ -295,7 +356,7 @@ public class calculatorController {
                 if (opStack.peek() == T_LPAR){ opStack.pop();}
 
             } else if (Tokens[count] == T_DIV | Tokens[count] == T_MULTIPLY){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_DIV){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && !(opStack.peek() > T_MULTIPLY)){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                 }
@@ -303,7 +364,7 @@ public class calculatorController {
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
 
             } else if(Tokens[count] == T_ADD | Tokens[count] == T_SUBTRACT){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_ADD){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                 }
@@ -346,11 +407,12 @@ public class calculatorController {
         System.out.println(rpnTokens);
 
 
-        calculate(rpn, rpnTokens);
+        calculate(rpn, rpnTokens,0);
 
         System.out.println(rpn);
 
         calcOut.setText(rpn.pop());
+
 //        if (result % 1 == 0){
 //            roundResult = (int) ((double) result);
 //            calcOut.setText(String.valueOf(roundResult));
