@@ -19,13 +19,12 @@ public class calculatorController {
     Stack<Integer> opStack = new Stack<>();
 
     Integer operator;
-    Stack<Integer> saveOperator = new Stack<>();
-    Stack<String> saveOperand = new Stack<String>();
+
     double operand1;
     double operand2;
     double operand3;
 
-    String temp;
+    boolean denominator;
 
     int opToken1;
     int opToken2;
@@ -38,8 +37,6 @@ public class calculatorController {
     double totalNumber;
     String totalVariable;
 
-    Double result;
-    int roundResult;
 
     @FXML
     private TextField calcIn;
@@ -119,16 +116,15 @@ public class calculatorController {
         }
     }
 
-    public void calculate(Stack<String> rpn, Stack<Integer> rpnTokens, int operator){
+    public void calculate(Stack<String> rpn, Stack<Integer> rpnTokens){
 
         System.out.println("Calculate rpn      : "+ rpn);
         System.out.println("Calculate rpnTokens: "+rpnTokens);
 
-        if (operator == 0) {
-            operator = rpnTokens.pop();
-            System.out.println("operator:" + getOperator(operator));
-            rpn.pop();
-        }
+        operator = rpnTokens.pop();
+        System.out.println("operator:" + getOperator(operator));
+        rpn.pop();
+
 
         opToken1 = rpnTokens.pop();
         opToken2 = rpnTokens.pop();
@@ -136,60 +132,11 @@ public class calculatorController {
         System.out.println("opTOKEN1 = "+ getOperator(opToken1));
         System.out.println("opTOKEN2 = "+ getOperator(opToken2));
 
-// currently stuck on this need to make it so that it checks the optokens after coming back from a recursive call
-        //Checks to see if the first  and second operand taken is an operator or not
-        if(opToken1 != 9 && opToken1 != 8) {
-            System.out.println("OPERAND 1 IS AN OPERATOR!");
-
-            rpnTokens.push(opToken2);
-            rpnTokens.push(opToken1);
-
-            //Saving operator
-            saveOperator.push(operator);    //Used so operator is not lost on recursive call
-            System.out.println(getOperator(saveOperator.peek()) + " operator saved!");
-
-            //Recursive call
-            calculate(rpn, rpnTokens,0);
-
-            //Loading operator
-            operator = saveOperator.pop();  //gets the operator from the last call
-            System.out.println("Operator: " + getOperator(operator) + " Loaded");
-
-            System.out.println("Calculate rpn      : "+ rpn);
-            System.out.println("Calculate rpnTokens: "+rpnTokens);
-
-            calculate(rpn, rpnTokens, operator);
-
-        }
-
-        if(opToken2 != 9 && opToken2 != 8){
-            System.out.println("OPERAND 2 IS AN OPERATOR!");
-
-            rpnTokens.push(opToken2);
-
-            //Saving Operator
-            saveOperator.push(operator);    //Used so operator is not lost on recursive call
-            System.out.println(getOperator(saveOperator.peek()) + " operator saved!");
-
-            //Saving operand
-            saveOperand.push(rpn.pop());
-            System.out.println(saveOperand.peek()+" Operand Saved!");
-
-            //Recursive call
-            calculate(rpn, rpnTokens, 0);
-
-            //Loading operator and operand
-            operator = saveOperator.pop();  //gets the operator from the last call
-            rpn.push(saveOperand.pop());    //gets the operand from the last call
-
-            calculate(rpn, rpnTokens, operator);
-        }
-
         //Checks if any operand is a identifier and deals with it differently
         if (opToken1 == 8 | opToken2 == 8){
             System.out.println("Identifier");
-            String operand1 = rpn.pop();
             String operand2 = rpn.pop();
+            String operand1 = rpn.pop();
 
             switch (operator) {
                 case T_MULTIPLY:
@@ -215,8 +162,10 @@ public class calculatorController {
                     }
 
                     for (String e : variableList){
-                        totalVariable += e;
+                        totalVariable += e + "*";
                     }
+
+                    totalVariable = totalVariable.substring(0,totalVariable.length()-1);    //removes extra *
 
                     System.out.println("NumberList = "+numberList);
                     System.out.println("VariableList = "+variableList);
@@ -232,15 +181,79 @@ public class calculatorController {
 
 
                     //CLEARING VARIABLES
-                    totalVariable = "";
-                    totalNumber = 1;
                     numberList.clear();
                     variableList.clear();
                     break;
 
-//                default:
-//                    rpn.push(operand1 + getOperator(operator) + operand2);
-//                    rpnTokens.push(T_IDENTIFIER);
+                case T_DIV:
+                    totalNumber = 1;
+                    totalVariable = "";
+
+                    denominator = false;
+
+                    operand1 += "*\\*" + operand2;
+                    System.out.println("OP1 B4 SPlIT: "+operand1);
+                    splitOperand = operand1.split("\\*");
+
+                    for(String x : splitOperand) {
+                        System.out.println("x: "+x);
+                        if (x.equals("\\")){
+                            System.out.println("Denominator");
+                            denominator = true;
+                        } else if (isNumeric(x) && denominator) {
+                            System.out.println("Number and denom");
+                            numberList.add(Math.pow(Double.parseDouble(x),-1));
+                        } else if (denominator){
+                            System.out.println("variable and denom");
+                            variableList.add(x+"^-1");
+                        }else if (isNumeric(x)) {
+                            System.out.println("number");
+                            numberList.add(Double.parseDouble(x));
+                        } else {
+                            System.out.println("variable");
+                            variableList.add(x);
+                        }
+                    }
+
+                    System.out.println("NumList B4 = "+numberList);
+                    System.out.println("VarList B4 = "+variableList);
+
+                    for (double i : numberList){
+                        totalNumber = i * totalNumber;
+                    }
+
+                    for (String e : variableList){
+                        totalVariable += e;
+                    }
+
+                    System.out.println("NumberList =   "+numberList);
+                    System.out.println("VariableList = "+variableList);
+
+                    System.out.println("TotalNumber = "+totalNumber);
+                    System.out.println("Total Variable= "+totalVariable);
+
+                    totalVariable = totalNumber+"*"+ totalVariable;
+
+                    System.out.println("TotalVariable = " + totalVariable);
+                    rpn.push(totalVariable);
+                    rpnTokens.push(T_IDENTIFIER);
+
+
+                    //CLEARING VARIABLES
+                    numberList.clear();
+                    variableList.clear();
+                    break;
+
+                case T_POWER:
+
+                    rpn.push(operand1+"^("+operand2+")" );
+                    rpnTokens.push(T_IDENTIFIER);
+                    break;
+
+
+                default:
+                    rpn.push("("+operand1 + getOperator(operator) + operand2+")");
+                    rpnTokens.push(T_IDENTIFIER);
             }
             return;
         }
@@ -275,7 +288,7 @@ public class calculatorController {
 
                 break;
             case T_POWER:
-                operand3 = Math.pow(operand2, operand1);
+                operand3 = Math.pow(operand1, operand2);
                 System.out.println(operand1 + " ^ " + operand2 + " = " + operand3);
 
                 break;
@@ -351,6 +364,7 @@ public class calculatorController {
                 while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
                 }
 
                 if (opStack.peek() == T_LPAR){ opStack.pop();}
@@ -359,6 +373,8 @@ public class calculatorController {
                 while (!opStack.isEmpty() && opStack.peek() != T_LPAR && !(opStack.peek() > T_MULTIPLY)){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
+
                 }
                 opStack.push(Tokens[count]);
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
@@ -367,6 +383,8 @@ public class calculatorController {
                 while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
+
                 }
                 opStack.push(Tokens[count]);
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
@@ -375,6 +393,8 @@ public class calculatorController {
                 while(!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_POWER){
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
+
                 }
                 opStack.push(Tokens[count]);
 
@@ -401,13 +421,12 @@ public class calculatorController {
         while(!opStack.empty()){
             rpnTokens.push(opStack.peek());
             rpn.push(getOperator(opStack.pop()));
+            calculate(rpn, rpnTokens);
+
         }
 
         System.out.println(rpn);
         System.out.println(rpnTokens);
-
-
-        calculate(rpn, rpnTokens,0);
 
         System.out.println(rpn);
 
