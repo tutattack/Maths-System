@@ -3,6 +3,7 @@ package sample;
 import javafx.fxml.FXML;
 
 
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
@@ -44,6 +45,49 @@ public class calculatorController {
     private TextField calcOut;
     @FXML
     private CheckBox variableValuesCheckBox;
+
+    public void add_text(String text){
+        String current_text = calcIn.getText();
+        calcIn.setText(current_text+text);
+    }
+
+    public void add_sin(){
+        add_text("sin(");
+    }
+
+
+    public void add_cos(){
+        add_text("cos(");
+    }
+
+    public void add_tan(){
+        add_text("tan(");
+    }
+
+    public void add_cosec(){
+        add_text("cosec(");
+    }
+
+    public void add_sec(){
+        add_text("sec(");
+    }
+
+    public void add_cot(){
+        add_text("cot(");
+    }
+
+    public void add_log(){
+        add_text("log(");
+    }
+
+    public void add_ln(){
+        add_text("ln(");
+    }
+
+    public void clear(){
+        calcIn.clear();
+    }
+
 
     public String validateVariableValue(String variableName){
         Scanner scan = new Scanner(System.in);

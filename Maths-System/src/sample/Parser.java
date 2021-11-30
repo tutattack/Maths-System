@@ -5,7 +5,8 @@ package sample;
 // <term>	::= <factor> <term'>
 // <term'>	::= <operator> <factor> <term'> | <empty>
 // <factor> ::= <number> | (<expr>)
-// <variable> ::= <identifier> <equal> <expr> | <identifier>
+// <variable> ::= <identifier> <equal> <expr> | <identifier> | <identity>(<number>) | <identity>(<expression>)
+// <identity> ::= sin | cos | tan | cosec | sec | cot
 // <operator> ::= <equal> | <division> | <multiplication> | <add> | <subtract> | <power>
 // <equal> ::= =
 // <power> ::= ^
