@@ -18,6 +18,15 @@ public class Lexer {
     public final static int T_NUMBER = 9;       // [0-9]
     public final static int T_EQUAL = 10;        //=
     public final static int T_DECIMAL = 11;     // .
+    public final static int T_SIN = 12;
+    public final static int T_COS = 13;
+    public final static int T_TAN = 14;
+    public final static int T_COSEC = 15;
+    public final static int T_SEC = 16;
+    public final static int T_COT = 17;
+    public final static int T_LOG = 18;
+    public final static int T_LN = 19;
+
 
     private static int MAX=64;
     public int NR_tokens;
@@ -136,13 +145,60 @@ public class Lexer {
 
                         System.out.println(num);
 
-                        if (identifierList.isEmpty() | !identifierList.contains(num)){
-                            identifierList.add(num);
+                        switch (num){
+                            case "sin":
+                                tokens[counter] = T_SIN;
+                                values[counter] = -1;
+                                break;
+
+                            case "cos":
+                                tokens[counter] = T_COS;
+                                values[counter] = -1;
+                                break;
+
+                            case "tan":
+                                tokens[counter] = T_TAN;
+                                System.out.println("TAN");
+                                values[counter] = -1;
+                                break;
+
+                            case "cosec":
+                                tokens[counter] = T_COSEC;
+                                values[counter] = -1;
+                                break;
+
+                            case "sec":
+                                tokens[counter] = T_SEC;
+                                values[counter] = -1;
+                                break;
+
+                            case "cot":
+                                tokens[counter] = T_COT;
+                                values[counter] = -1;
+                                break;
+
+                            case "log":
+                                tokens[counter] = T_LOG;
+                                values[counter] = -1;
+                                break;
+
+                            case "ln":
+                                tokens[counter] = T_LN;
+                                values[counter] = -1;
+                                break;
+
+                            default:
+                                if (identifierList.isEmpty() | !identifierList.contains(num)){
+                                    identifierList.add(num);
+                                }
+
+                                identifierValue = identifierList.indexOf(num);
+
+                                values[counter] = identifierValue;
+
                         }
 
-                        identifierValue = identifierList.indexOf(num);
 
-                        values[counter] = identifierValue;
                         num="";
                         i--;
                         counter++;

@@ -2,8 +2,6 @@ package sample;
 
 import javafx.fxml.FXML;
 
-
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
@@ -93,6 +91,8 @@ public class calculatorController {
         Scanner scan = new Scanner(System.in);
         Parse variableParser = new Parse();
 
+
+        //CHANGE THIS TO USE POP UP BOX
         System.out.println("Enter value for (leave blank if unknown): " + variableName);
         String variableValue = scan.nextLine();
 
@@ -169,12 +169,56 @@ public class calculatorController {
         System.out.println("operator:" + getOperator(operator));
         rpn.pop();
 
+        if (operator >= T_SIN && operator < T_LOG){
+            operand1 = Double.parseDouble(rpn.pop());
+            System.out.println("operand1 = "+ operand1);
+
+
+            operand1 =  Math.toRadians(operand1);
+            System.out.println("operand1 = "+ operand1);
+            switch (operator){
+                case T_SIN:
+                    operand3 = Math.sin(operand1);
+                    break;
+
+                case T_COS:
+                    operand3 = Math.cos(operand1);
+                    break;
+
+                case T_TAN:
+                    operand3 = Math.tan(operand1);
+                    break;
+
+                case T_COSEC:
+                    operand3 = 1 / Math.sin(operand1);
+                    break;
+
+                case T_SEC:
+                    operand3 = 1 / Math.cos(operand1);
+                    break;
+
+                case T_COT:
+                    operand3 = 1 / Math.tan(operand1);
+                    break;
+
+            }
+
+            operand3 = Math.round(operand3*1000000.0)/1000000.0;
+            rpn.push(String.valueOf(operand3));
+            rpnTokens.push(T_NUMBER);
+            System.out.println(operand3);
+            return;
+        }
 
         opToken1 = rpnTokens.pop();
         opToken2 = rpnTokens.pop();
 
         System.out.println("opTOKEN1 = "+ getOperator(opToken1));
         System.out.println("opTOKEN2 = "+ getOperator(opToken2));
+
+
+
+
 
         //Checks if any operand is a identifier and deals with it differently
         if (opToken1 == 8 | opToken2 == 8){
@@ -394,37 +438,35 @@ public class calculatorController {
         System.out.println("Starting rpn: "+rpn);
         System.out.println("Starting rpnTokens: "+ rpnTokens);
 
-        while(count < NR_tokens){
-            if (Tokens[count] == T_NUMBER){
+        while(count < NR_tokens) {
+
+            if (Tokens[count] == T_NUMBER) {
                 rpnTokens.push(Tokens[count]);
                 rpn.push(String.valueOf(SymbolTable[count]));
                 System.out.println("Number " + rpn.peek() + " added to rpn Stack");
 
-            } else if (Tokens[count] == T_LPAR){ // Token is (
+            } else if (Tokens[count] == T_LPAR) { // Token is (
                 opStack.push(Tokens[count]);
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
 
-            } else if (Tokens[count] == T_RPAR){ // Token is )
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
+            } else if (Tokens[count] == T_RPAR) { // Token is )
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR) {
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                     calculate(rpn, rpnTokens);
                 }
 
-                if (opStack.peek() == T_LPAR){ opStack.pop();}
-
-            } else if (Tokens[count] == T_DIV | Tokens[count] == T_MULTIPLY){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && !(opStack.peek() > T_MULTIPLY)){
+                if (opStack.peek() == T_LPAR) {
+                    opStack.pop();
+                }
+                if (opStack.peek() >= T_SIN) {
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                     calculate(rpn, rpnTokens);
-
                 }
-                opStack.push(Tokens[count]);
-                System.out.println("Operator " + opStack.peek() + " added to opStack");
 
-            } else if(Tokens[count] == T_ADD | Tokens[count] == T_SUBTRACT){
-                while (!opStack.isEmpty() && opStack.peek() != T_LPAR){
+            } else if (Tokens[count] == T_DIV | Tokens[count] == T_MULTIPLY) {
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && !(opStack.peek() > T_MULTIPLY)) {
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                     calculate(rpn, rpnTokens);
@@ -433,8 +475,18 @@ public class calculatorController {
                 opStack.push(Tokens[count]);
                 System.out.println("Operator " + opStack.peek() + " added to opStack");
 
-            } else if(Tokens[count] == T_POWER){
-                while(!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_POWER){
+            } else if (Tokens[count] == T_ADD | Tokens[count] == T_SUBTRACT) {
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR) {
+                    rpnTokens.push(opStack.peek());
+                    rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
+
+                }
+                opStack.push(Tokens[count]);
+                System.out.println("Operator " + opStack.peek() + " added to opStack");
+
+            } else if (Tokens[count] == T_POWER) {
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_POWER) {
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                     calculate(rpn, rpnTokens);
@@ -442,11 +494,11 @@ public class calculatorController {
                 }
                 opStack.push(Tokens[count]);
 
-            } else if(Tokens[count] == T_IDENTIFIER){
+            } else if (Tokens[count] == T_IDENTIFIER) {
                 identifier = identifierList.get(SymbolTable[count]);
                 System.out.println("Identifier: " + identifier);
 
-                if(isNumeric(identifier)){  //if the identifier has a value
+                if (isNumeric(identifier)) {  //if the identifier has a value
                     rpn.push(identifier);
                     rpnTokens.push(T_NUMBER); //Changing the token value to a number rather than an identifier
 
@@ -454,6 +506,41 @@ public class calculatorController {
                     rpn.push(identifier);
                     rpnTokens.push(Tokens[count]);
                 }
+            }else if(Tokens[count] == T_DECIMAL){
+
+
+            }else if(Tokens[count] == T_SIN){
+                opStack.push(T_SIN);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_COS){
+                opStack.push(T_COS);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_TAN){
+                opStack.push(T_TAN);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_COSEC){
+                opStack.push(T_COSEC);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_SEC){
+                opStack.push(T_SEC);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_COT){
+                opStack.push(T_COT);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_LOG){
+                opStack.push(T_LOG);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
+            }else if(Tokens[count] == T_LN){
+                opStack.push(T_LN);
+                System.out.println(opStack.peek()+" added to the opStack stack");
+
             }
 
             System.out.println(rpn);
