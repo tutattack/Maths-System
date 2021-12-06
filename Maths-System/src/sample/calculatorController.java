@@ -2,10 +2,10 @@ package sample;
 
 import javafx.fxml.FXML;
 
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -53,7 +53,6 @@ public class calculatorController {
         add_text("sin(");
     }
 
-
     public void add_cos(){
         add_text("cos(");
     }
@@ -78,14 +77,29 @@ public class calculatorController {
         add_text("log(");
     }
 
-    public void add_ln(){
-        add_text("ln(");
-    }
+    public void add_ln(){ add_text("ln("); }
+
+    public void add_fx() { add_text("f(x)=");}
+
+    public void add_square_root() { add_text("√(");}
 
     public void clear(){
         calcIn.clear();
     }
 
+    public String find_variable_value(String variableName){
+        TextInputDialog textInput = new TextInputDialog();
+        textInput.setTitle("Enter variable value");
+        textInput.getDialogPane().setContentText(variableName+": ");
+        Optional<String> result = textInput.showAndWait();
+        TextField input = textInput.getEditor();
+        if (result!=null) {
+            return String.valueOf(input.getText());
+        }
+        else{
+            return null;
+        }
+    }
 
     public String validateVariableValue(String variableName){
         Scanner scan = new Scanner(System.in);
@@ -93,8 +107,9 @@ public class calculatorController {
 
 
         //CHANGE THIS TO USE POP UP BOX
-        System.out.println("Enter value for (leave blank if unknown): " + variableName);
-        String variableValue = scan.nextLine();
+
+        String variableValue = find_variable_value(variableName);
+
 
         if(!variableValue.equals("")) {
             variableParser.lexer(variableValue);

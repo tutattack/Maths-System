@@ -26,6 +26,8 @@ public class Lexer {
     public final static int T_COT = 17;
     public final static int T_LOG = 18;
     public final static int T_LN = 19;
+    public final static int T_FOFX  = 20;
+    public final static int T_SQUARE_ROOT = 21;
 
 
     private static int MAX=64;
@@ -91,6 +93,10 @@ public class Lexer {
                     values[counter]=-1;
                     counter++;
                     break;
+                case '√': tokens[counter] = T_SQUARE_ROOT;
+                    values[counter]=-1;
+                    counter++;
+                    break;
                 default:
                     if (Character.isDigit(a)){
                         tokens[counter] = T_NUMBER;
@@ -126,6 +132,11 @@ public class Lexer {
                             num+= lexeme[i+1];  //Gets the full variable name if it starts with '_'
                         }
 
+                        if (Character.compare(lexeme[i+1],'(')==0){
+                            num = "f(x)";
+                            i+=3;
+                        }
+
                         if (flag2==0 && !flag){
                             i++;
                             if (!Character.isLetter(lexeme[i])){
@@ -146,6 +157,10 @@ public class Lexer {
                         System.out.println(num);
 
                         switch (num){
+                            case "f(x)":
+                                tokens[counter] = T_FOFX;
+                                values[counter] = -1;
+                                break;
                             case "sin":
                                 tokens[counter] = T_SIN;
                                 values[counter] = -1;

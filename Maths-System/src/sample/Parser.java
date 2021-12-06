@@ -77,7 +77,7 @@ class Parse extends Lexer{
 
     void term_p(int level){
         System.out.print("term_p() called at level: "+level+"\n");
-        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER)){
+        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER) || match(T_SQUARE_ROOT)){
             advance(level+1);
             factor(level+1);
             term_p(level+1);
@@ -93,7 +93,7 @@ class Parse extends Lexer{
         System.out.print("expression_p() called at level: "+level+"\n");
         if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER)
                 || match(T_SIN) || match(T_COS) || match(T_TAN) ||match(T_COSEC) || match(T_SEC) ||
-                match(T_COT) || match(T_LOG) || match(T_LN)){
+                match(T_COT) || match(T_LOG) || match(T_LN) || match(T_FOFX)){
             advance(level+1);
             term(level+1);
             expression_p(level+1);

@@ -48,9 +48,9 @@
                         <Button fx:id="log_button" mnemonicParsing="false" onAction="#add_log" text="log()" GridPane.rowIndex="2" />
                         <Button fx:id="ln_button" mnemonicParsing="false" onAction="#add_ln" text="ln()" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Button fx:id="tan_button" mnemonicParsing="false" onAction="#add_tan" text="Tan" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" text="f(x)" GridPane.columnIndex="3" />
+                        <Button mnemonicParsing="false" onAction="#add_fx" text="f(x)" GridPane.columnIndex="3" />
                         <Button fx:id="cot_button" mnemonicParsing="false" onAction="#add_cot" text="Cot" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" text="√x" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Button mnemonicParsing="false" onAction="#add_square_root" text="√x" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                         <Button fx:id="clear_button" mnemonicParsing="false" onAction="#clear" text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                         <Button mnemonicParsing="false" text="Ans" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                      </children>
