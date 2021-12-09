@@ -25,7 +25,6 @@ class Parse extends Lexer{
     int currentToken;
     int ret;
 
-
     boolean match(int token){
         if (lookahead==-1){
             lookahead = Tokens[currentToken];
@@ -54,8 +53,6 @@ class Parse extends Lexer{
         lookahead = -1;
         ret = 1;
         expression(0);
-        System.out.println(NR_tokens);
-        System.out.println(currentToken);
         if (currentToken<NR_tokens){
             System.out.print("SYNTAX ERROR- Token: "+currentToken+" of value: "+SymbolTable[currentToken] + "\n");
             ret = 0;

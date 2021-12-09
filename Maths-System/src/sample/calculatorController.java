@@ -2,6 +2,9 @@ package sample;
 
 import javafx.fxml.FXML;
 
+import javafx.scene.SubScene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
 import java.util.ArrayList;
@@ -36,13 +39,16 @@ public class calculatorController {
     double totalNumber;
     String totalVariable;
 
-
+    @FXML
+    private LineChart<Double, Double> lineGraph;
     @FXML
     private TextField calcIn;
     @FXML
     private TextField calcOut;
     @FXML
     private CheckBox variableValuesCheckBox;
+    @FXML
+    private CheckBox multipleGraphs;
 
     public void add_text(String text){
         String current_text = calcIn.getText();
@@ -156,6 +162,8 @@ public class calculatorController {
         int NR_tokens = parser.NR_tokens;
         int[] Tokens = parser.Tokens;
         int[] SymbolTable = parser.SymbolTable;
+        XYChart.Series<Double, Double> graphValues = new XYChart.Series<>();
+
         ArrayList<String> identifierList = parser.identifierList;
 
         if (parser.parse() == 1){
@@ -169,7 +177,32 @@ public class calculatorController {
                 }
             }
 
-            shuntYard(NR_tokens, Tokens, SymbolTable, identifierList);
+            if(Tokens[0] == T_FOFX){
+                if(identifierList.size() > 1){
+                    System.out.println("ERROR TOO MANY VARIABLES");
+                } else if(identifierList.size() == 1){
+                    graphValues.getData().clear();
+
+                    if (!multipleGraphs.isSelected()) {
+                        lineGraph.getData().clear();
+                    }
+                    for (double i = -20; i <= 20; i += 0.02) {
+                        identifierList.set(0, String.valueOf(Math.round(i*100.0)/100.0));
+                        System.out.println("indetlist = "+ identifierList.get(0));
+                        graphValues.getData().add(new XYChart.Data<>(i, shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, true)));
+                    }
+
+                    System.out.println(graphValues);
+                    lineGraph.getData().add(graphValues);
+
+
+                }
+
+            } else {
+                shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, false);
+            }
+
+
         } else{
             System.out.println("PARSING FAILED");
         }
@@ -185,9 +218,18 @@ public class calculatorController {
         rpn.pop();
 
         if (operator >= T_SIN && operator < T_LOG){
+            opToken1 = rpnTokens.pop();
+            System.out.println("opToken1 = "+ opToken1);
+
+            if (opToken1 == 8){
+                rpn.push(getOperator(operator) + rpn.pop() + ")");
+                rpnTokens.push(T_IDENTIFIER);
+
+                return;
+            }
+
             operand1 = Double.parseDouble(rpn.pop());
             System.out.println("operand1 = "+ operand1);
-
 
             operand1 =  Math.toRadians(operand1);
             System.out.println("operand1 = "+ operand1);
@@ -230,9 +272,6 @@ public class calculatorController {
 
         System.out.println("opTOKEN1 = "+ getOperator(opToken1));
         System.out.println("opTOKEN2 = "+ getOperator(opToken2));
-
-
-
 
 
         //Checks if any operand is a identifier and deals with it differently
@@ -417,8 +456,28 @@ public class calculatorController {
 
             case T_POWER:
                 return "^";
+
             case T_NUMBER:
                 return "IS NUMBER";
+
+            case T_SIN:
+                return "sin(";
+
+            case T_COS:
+                return "cos(";
+
+            case T_TAN:
+                return "tan(";
+
+            case T_COSEC:
+                return "cosec(";
+
+            case T_SEC:
+                return "sec(";
+
+            case T_COT:
+                return "cot(";
+
             default:
                 return String.valueOf(op);
 
@@ -442,7 +501,7 @@ public class calculatorController {
     }
 
     //turns the input into Reverse polish notation (postfix)
-    public void shuntYard(int NR_tokens, int[] Tokens, int[] SymbolTable, ArrayList<String> identifierList){
+    public double shuntYard(int NR_tokens, int[] Tokens, int[] SymbolTable, ArrayList<String> identifierList, Boolean recursive){
         int count = 0;
 
         rpn.clear();
@@ -571,22 +630,31 @@ public class calculatorController {
 
         }
 
+
+        //cleanrpn(rpn.get(0).toCharArray());
+
         System.out.println(rpn);
         System.out.println(rpnTokens);
 
-        System.out.println(rpn);
+        if (recursive){
+            return Double.parseDouble(rpn.get(0));
+        }
+
 
         calcOut.setText(rpn.pop());
 
-//        if (result % 1 == 0){
-//            roundResult = (int) ((double) result);
-//            calcOut.setText(String.valueOf(roundResult));
-//        }else {
-//            calcOut.setText(result.toString());
-//        }
-
+        return 0;
 
     }
+
+//    public String cleanrpn(char[] rpn){
+//
+//        for (int i = 0; i< rpn.length; i++){
+//
+//        }
+//
+//    }
+
 
     
 }

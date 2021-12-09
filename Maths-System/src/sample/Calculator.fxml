@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -17,7 +17,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.calculatorController">
    <center>
-      <SplitPane dividerPositions="0.46321070234113715" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
             <VBox alignment="CENTER" prefHeight="398.0" prefWidth="255.0">
                <children>
@@ -26,7 +26,8 @@
                         <Font size="24.0" />
                      </font>
                   </TextField>
-                  <CheckBox fx:id="variableValuesCheckBox" mnemonicParsing="false" text="Allow variables" />
+                  <CheckBox fx:id="variableValuesCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0" text="Allow variables" />
+                  <CheckBox fx:id="multipleGraphs" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0" text="Multiple Graphs" />
                   <Pane prefHeight="37.0" prefWidth="232.0" />
                   <GridPane gridLinesVisible="true" prefHeight="124.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
                      <columnConstraints>
@@ -63,13 +64,16 @@
                   </TextField>
                </children>
             </VBox>
-            <LineChart>
+            <LineChart fx:id="lineGraph" createSymbols="false" legendVisible="false">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <NumberAxis autoRanging="false" lowerBound="-20" side="BOTTOM" tickUnit="1" upperBound="20" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis autoRanging="false" lowerBound="-20" side="LEFT" tickUnit="1" upperBound="20" />
               </yAxis>
+               <cursor>
+                  <Cursor fx:constant="CROSSHAIR" />
+               </cursor>
             </LineChart>
          </items>
       </SplitPane>

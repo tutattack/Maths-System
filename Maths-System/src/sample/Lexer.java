@@ -132,7 +132,7 @@ public class Lexer {
                             num+= lexeme[i+1];  //Gets the full variable name if it starts with '_'
                         }
 
-                        if (Character.compare(lexeme[i+1],'(')==0){
+                        if (lexeme.length != i+1 && Character.compare(lexeme[i+1],'(')==0){
                             num = "f(x)";
                             i+=3;
                         }
