@@ -309,7 +309,7 @@ public class calculatorController {
                     for (double i = -20; i <= 20; i += 0.02) {
 
                         i = Math.round(i*100.0)/100.0;
-                        System.out.println(i);
+                        //System.out.println(i);
                         identifierList.set(0, String.valueOf(i));
                         //System.out.println("indetlist = "+ identifierList.get(0));
                         double shuntYard = shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, true);
@@ -317,8 +317,8 @@ public class calculatorController {
 
                         //For finding the roots
                         if (shuntYard == 0){
-                            System.out.println("ANSWER = "+i);
-                             answer.add(i);
+                            //System.out.println("ANSWER = "+i);
+                            answer.add(i);
                         }
                     }
 
