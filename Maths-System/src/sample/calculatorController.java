@@ -73,6 +73,7 @@ public class calculatorController {
     Integer upperBound =  20;
     Integer input = 20;
 
+    ArrayList<Double> answer = new ArrayList<>();
 
     /********
         FXML
@@ -294,6 +295,8 @@ public class calculatorController {
                     //Clears the graph values list
                     graphValues.getData().clear();
 
+                    String variableName = identifierList.get(0);
+
                     //Checks to see if the user would like to see multiple graphs at once
                     if (!multipleGraphs.isSelected()) {
                         lineGraph.getData().clear();    //Clears the graph
@@ -304,9 +307,19 @@ public class calculatorController {
                     the graph.
                      */
                     for (double i = -20; i <= 20; i += 0.02) {
-                        identifierList.set(0, String.valueOf(Math.round(i*100.0)/100.0));
-                        System.out.println("indetlist = "+ identifierList.get(0));
-                        graphValues.getData().add(new XYChart.Data<>(i, shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, true)));
+
+                        i = Math.round(i*100.0)/100.0;
+                        System.out.println(i);
+                        identifierList.set(0, String.valueOf(i));
+                        //System.out.println("indetlist = "+ identifierList.get(0));
+                        double shuntYard = shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, true);
+                        graphValues.getData().add(new XYChart.Data<>(i, shuntYard));
+
+                        //For finding the roots
+                        if (shuntYard == 0){
+                            System.out.println("ANSWER = "+i);
+                             answer.add(i);
+                        }
                     }
 
                     //System.out.println(graphValues);
@@ -314,7 +327,17 @@ public class calculatorController {
                     //Plots the graph
                     lineGraph.getData().add(graphValues);
 
+                    //This is for getting the values at which the graph intersects the
+                    // yaxis
+                    String xValues = variableName + " = ";
 
+                    for (Double x: answer){
+                        xValues += x + ", ";
+                    }
+
+                    calcOut.setText(xValues);
+
+                    answer.clear();
                 }
 
             } else {
@@ -349,13 +372,13 @@ public class calculatorController {
         operator = rpnTokens.pop();
         rpn.pop();
 
-        System.out.println("operator:" + getOperator(operator));
+        //System.out.println("operator:" + getOperator(operator));
 
         //This is if the operator is a unary operation
         if (operator >= T_SIN){
             //Pops the operand token from the stack
             opToken1 = rpnTokens.pop();
-            System.out.println("opToken1 = "+ opToken1);
+            //System.out.println("opToken1 = "+ opToken1);
 
             /*
             If the operand contains an unknown variable then the operand
@@ -549,16 +572,16 @@ public class calculatorController {
                             //System.out.println("Denominator");
                             denominator = true; //Moved on to the denominator
                         } else if (isNumeric(x) && denominator) {
-                            System.out.println("Number and denom");
+                            //System.out.println("Number and denom");
                             numberList.add(Math.pow(Double.parseDouble(x),-1));
                         } else if (denominator){
-                            System.out.println("variable and denom");
+                            //System.out.println("variable and denom");
                             variableList.add(x+"^-1");
                         }else if (isNumeric(x)) {
-                            System.out.println("number");
+                            //System.out.println("number");
                             numberList.add(Double.parseDouble(x));
                         } else {
-                            System.out.println("variable");
+                            //System.out.println("variable");
                             variableList.add(x);
                         }
                     }
@@ -628,32 +651,32 @@ public class calculatorController {
 
             case T_ADD:
                 operand3 = operand1 + operand2;
-                System.out.println(operand1 + " + " + operand2 + " = " + operand3);
+                //System.out.println(operand1 + " + " + operand2 + " = " + operand3);
                 break;
 
             case T_SUBTRACT:
                 operand3 = operand1 - operand2;
-                System.out.println(operand1 + " - " + operand2 + " = " + operand3);
+                //System.out.println(operand1 + " - " + operand2 + " = " + operand3);
                 break;
 
             case T_MULTIPLY:
                 operand3 = operand1 * operand2;
-                System.out.println(operand1 + " * " + operand2 + " = " + operand3);
+                //System.out.println(operand1 + " * " + operand2 + " = " + operand3);
                 break;
 
             case T_DIV:
                 operand3 = operand1 / operand2;
-                System.out.println(operand1 + " / " + operand2 + " = " + operand3);
+                //System.out.println(operand1 + " / " + operand2 + " = " + operand3);
                 break;
 
             case T_POWER:
                 operand3 = Math.pow(operand1, operand2);
-                System.out.println(operand1 + " ^ " + operand2 + " = " + operand3);
+                //System.out.println(operand1 + " ^ " + operand2 + " = " + operand3);
                 break;
 
             case T_DECIMAL:
                 operand3 = Double.parseDouble((int) operand1 + "." + (int) operand2);
-                System.out.println((int) operand1 + "." + (int) operand2 + "=" + operand3);
+                //System.out.println((int) operand1 + "." + (int) operand2 + "=" + operand3);
                 break;
         }
 
@@ -797,12 +820,12 @@ public class calculatorController {
             if (Tokens[count] == T_NUMBER) {
                 rpnTokens.push(Tokens[count]);
                 rpn.push(String.valueOf(SymbolTable[count]));
-                System.out.println("Number " + rpn.peek() + " added to rpn Stack");
+                //System.out.println("Number " + rpn.peek() + " added to rpn Stack");
 
             // ( are pushed straight to the rpn stack
             } else if (Tokens[count] == T_LPAR) { // Token is (
                 opStack.push(Tokens[count]);
-                System.out.println("Operator " + opStack.peek() + " added to opStack");
+                //System.out.println("Operator " + opStack.peek() + " added to opStack");
 
             // ) signifies that all items in the opstack need to be executed until the next ( is found
             } else if (Tokens[count] == T_RPAR) { // Token is )
@@ -835,7 +858,7 @@ public class calculatorController {
 
                 }
                 opStack.push(Tokens[count]);
-                System.out.println("Operator " + opStack.peek() + " added to opStack");
+                //System.out.println("Operator " + opStack.peek() + " added to opStack");
 
             //Add and subtract have same precedence
             //Will try to add itself to opstack and will execute if it cant
@@ -847,7 +870,7 @@ public class calculatorController {
 
                 }
                 opStack.push(Tokens[count]);
-                System.out.println("Operator " + opStack.peek() + " added to opStack");
+                //System.out.println("Operator " + opStack.peek() + " added to opStack");
 
             //Power has highest precedence
             //Will only execute here if place on another power
@@ -892,35 +915,35 @@ public class calculatorController {
              */
             }else if(Tokens[count] == T_SIN){
                 opStack.push(T_SIN);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_COS){
                 opStack.push(T_COS);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_TAN){
                 opStack.push(T_TAN);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_COSEC){
                 opStack.push(T_COSEC);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_SEC){
                 opStack.push(T_SEC);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_COT){
                 opStack.push(T_COT);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_LOG){
                 opStack.push(T_LOG);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             }else if(Tokens[count] == T_LN){
                 opStack.push(T_LN);
-                System.out.println(opStack.peek()+" added to the opStack stack");
+                //System.out.println(opStack.peek()+" added to the opStack stack");
 
             } else if(Tokens[count] == T_SQUARE_ROOT){
                 opStack.push(T_SQUARE_ROOT);
