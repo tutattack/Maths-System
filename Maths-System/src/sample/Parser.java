@@ -29,14 +29,8 @@ class Parse extends Lexer{
         if (lookahead==-1){
             lookahead = Tokens[currentToken];
         }
-        if (token==lookahead){
-            //System.out.print("Token match"+"\n");
-            return true;
-        }
-        else{
-            //System.out.print("Tokens do not match on level: " + level+"\n");
-            return false;
-        }
+
+        return token == lookahead;  //Returns if token mathes or not
     }
 
     void advance(int level){
@@ -74,7 +68,7 @@ class Parse extends Lexer{
 
     void term_p(int level){
         System.out.print("term_p() called at level: "+level+"\n");
-        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER) || match(T_SQUARE_ROOT)){
+        if (match(T_MULTIPLY) || match(T_DIV) || match(T_ADD) || match(T_SUBTRACT) || match(T_POWER) || match(T_DECIMAL) ||match(T_SQUARE_ROOT)){
             advance(level+1);
             factor(level+1);
             term_p(level+1);

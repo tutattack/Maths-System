@@ -2,8 +2,8 @@ package sample;
 
 import javafx.fxml.FXML;
 
-import javafx.scene.SubScene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
@@ -39,8 +39,16 @@ public class calculatorController {
     double totalNumber;
     String totalVariable;
 
+    Integer lowerBound = -20;
+    Integer upperBound =  20;
+    Integer input = 20;
+
     @FXML
     private LineChart<Double, Double> lineGraph;
+    @FXML
+    private NumberAxis xaxis;
+    @FXML
+    private NumberAxis yaxis;
     @FXML
     private TextField calcIn;
     @FXML
@@ -99,7 +107,7 @@ public class calculatorController {
         textInput.getDialogPane().setContentText(variableName+": ");
         Optional<String> result = textInput.showAndWait();
         TextField input = textInput.getEditor();
-        if (result!=null) {
+        if (result.isPresent()) {
             return String.valueOf(input.getText());
         }
         else{
@@ -149,6 +157,32 @@ public class calculatorController {
 
         System.out.println("Returning VariableValue: " + variableParser.SymbolTable[0]);
         return String.valueOf(variableParser.SymbolTable[0]);
+    }
+
+    public void changeGraphScale(){
+        TextInputDialog textInput = new TextInputDialog();
+        textInput.setTitle("Change Graph Scale");
+        textInput.getDialogPane().setContentText("Set graph scale: ");
+        textInput.showAndWait();
+
+        try{
+            input = Integer.parseInt(textInput.getEditor().getText());
+        } catch(final NumberFormatException e){
+            System.out.println("ERROR: NUMBER FORMAT EXCEPTION");
+        }
+
+        System.out.println(textInput.getEditor().getText());
+
+        lowerBound = -1 * input;
+        upperBound = input;
+
+        System.out.println(upperBound);
+        System.out.println(lowerBound);
+
+        xaxis.setLowerBound(lowerBound);
+        xaxis.setUpperBound(upperBound);
+        yaxis.setLowerBound(lowerBound);
+        yaxis.setUpperBound(upperBound);
     }
 
     public void parse(){
@@ -217,11 +251,11 @@ public class calculatorController {
         System.out.println("operator:" + getOperator(operator));
         rpn.pop();
 
-        if (operator >= T_SIN && operator < T_LOG){
+        if (operator >= T_SIN){
             opToken1 = rpnTokens.pop();
             System.out.println("opToken1 = "+ opToken1);
 
-            if (opToken1 == 8){
+            if (opToken1 == T_IDENTIFIER){
                 rpn.push(getOperator(operator) + rpn.pop() + ")");
                 rpnTokens.push(T_IDENTIFIER);
 
@@ -230,9 +264,11 @@ public class calculatorController {
 
             operand1 = Double.parseDouble(rpn.pop());
             System.out.println("operand1 = "+ operand1);
+            operand2 = operand1;
 
             operand1 =  Math.toRadians(operand1);
             System.out.println("operand1 = "+ operand1);
+            System.out.println("operand2 = "+ operand2);
             switch (operator){
                 case T_SIN:
                     operand3 = Math.sin(operand1);
@@ -258,6 +294,17 @@ public class calculatorController {
                     operand3 = 1 / Math.tan(operand1);
                     break;
 
+                case T_LOG:
+                    operand3 = Math.log(operand2) / Math.log(10);
+                    break;
+
+                case T_LN:
+                    operand3 = Math.log(operand2);
+                    break;
+
+                case T_SQUARE_ROOT:
+                    operand3 = Math.sqrt(operand2);
+                    break;
             }
 
             operand3 = Math.round(operand3*1000000.0)/1000000.0;
@@ -275,7 +322,7 @@ public class calculatorController {
 
 
         //Checks if any operand is a identifier and deals with it differently
-        if (opToken1 == 8 | opToken2 == 8){
+        if (opToken1 == T_IDENTIFIER | opToken2 == T_IDENTIFIER){
             System.out.println("Identifier");
             String operand2 = rpn.pop();
             String operand1 = rpn.pop();
@@ -434,6 +481,11 @@ public class calculatorController {
                 System.out.println(operand1 + " ^ " + operand2 + " = " + operand3);
 
                 break;
+
+            case T_DECIMAL:
+                operand3 = Double.parseDouble((int) operand1 + "." + (int) operand2);
+                System.out.println((int) operand1 + "." + (int) operand2 + "=" + operand3);
+                break;
         }
 
         rpn.push(String.valueOf(operand3));
@@ -477,6 +529,15 @@ public class calculatorController {
 
             case T_COT:
                 return "cot(";
+
+            case T_LOG:
+                return "log(";
+
+            case T_LN:
+                return "ln(";
+
+            case T_SQUARE_ROOT:
+                return "√";
 
             default:
                 return String.valueOf(op);
@@ -533,7 +594,7 @@ public class calculatorController {
                 if (opStack.peek() == T_LPAR) {
                     opStack.pop();
                 }
-                if (opStack.peek() >= T_SIN) {
+                if (!opStack.isEmpty() && opStack.peek() >= T_SIN) {
                     rpnTokens.push(opStack.peek());
                     rpn.push(getOperator(opStack.pop()));
                     calculate(rpn, rpnTokens);
@@ -581,7 +642,13 @@ public class calculatorController {
                     rpnTokens.push(Tokens[count]);
                 }
             }else if(Tokens[count] == T_DECIMAL){
+                while (!opStack.isEmpty() && opStack.peek() != T_LPAR && opStack.peek() < T_DECIMAL) {
+                    rpnTokens.push(opStack.peek());
+                    rpn.push(getOperator(opStack.pop()));
+                    calculate(rpn, rpnTokens);
 
+                }
+                opStack.push(Tokens[count]);
 
             }else if(Tokens[count] == T_SIN){
                 opStack.push(T_SIN);
@@ -615,6 +682,9 @@ public class calculatorController {
                 opStack.push(T_LN);
                 System.out.println(opStack.peek()+" added to the opStack stack");
 
+            } else if(Tokens[count] == T_SQUARE_ROOT){
+                opStack.push(T_SQUARE_ROOT);
+                System.out.println(opStack.peek()+" added to the opStack stack");
             }
 
             System.out.println(rpn);

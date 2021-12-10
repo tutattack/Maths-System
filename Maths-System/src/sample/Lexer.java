@@ -9,15 +9,15 @@ public class Lexer {
 
     public final static int T_LPAR = 1;         // (
     public final static int T_RPAR = 2;         // )
-    public final static int T_POWER = 3;        // ^
-    public final static int T_DIV = 4;          // %
-    public final static int T_MULTIPLY = 5;     // *
-    public final static int T_ADD = 6;          // +
-    public final static int T_SUBTRACT = 7;     // -
-    public final static int T_IDENTIFIER = 8;   // [A-Z] | [a-z]
-    public final static int T_NUMBER = 9;       // [0-9]
-    public final static int T_EQUAL = 10;        //=
-    public final static int T_DECIMAL = 11;     // .
+    public final static int T_DECIMAL = 3;     // .
+    public final static int T_POWER = 4;        // ^
+    public final static int T_DIV = 5;          // %
+    public final static int T_MULTIPLY = 6;     // *
+    public final static int T_ADD = 7;          // +
+    public final static int T_SUBTRACT = 8;     // -
+    public final static int T_IDENTIFIER = 9;   // [A-Z] | [a-z]
+    public final static int T_NUMBER = 10;       // [0-9]
+    public final static int T_EQUAL = 11;        //=
     public final static int T_SIN = 12;
     public final static int T_COS = 13;
     public final static int T_TAN = 14;

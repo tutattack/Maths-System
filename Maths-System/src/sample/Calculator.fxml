@@ -18,64 +18,76 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.calculatorController">
    <center>
       <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <items>
-            <VBox alignment="CENTER" prefHeight="398.0" prefWidth="255.0">
-               <children>
-                  <TextField fx:id="calcIn" alignment="CENTER" onAction="#parse" prefHeight="93.0" prefWidth="232.0" promptText="Enter Calculation" VBox.vgrow="ALWAYS">
-                     <font>
-                        <Font size="24.0" />
-                     </font>
-                  </TextField>
-                  <CheckBox fx:id="variableValuesCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0" text="Allow variables" />
-                  <CheckBox fx:id="multipleGraphs" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0" text="Multiple Graphs" />
-                  <Pane prefHeight="37.0" prefWidth="232.0" />
-                  <GridPane gridLinesVisible="true" prefHeight="124.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-                     </rowConstraints>
-                     <children>
-                        <Button fx:id="sin_button" mnemonicParsing="false" onAction="#add_sin" text="Sin" />
-                        <Button fx:id="cos_button" mnemonicParsing="false" onAction="#add_cos" text="Cos" GridPane.columnIndex="1" />
-                        <Button fx:id="cosec_button" mnemonicParsing="false" onAction="#add_cosec" text="Cosec" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
-                        <Button fx:id="sec_button" mnemonicParsing="false" onAction="#add_sec" text="Sec" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Button fx:id="log_button" mnemonicParsing="false" onAction="#add_log" text="log()" GridPane.rowIndex="2" />
-                        <Button fx:id="ln_button" mnemonicParsing="false" onAction="#add_ln" text="ln()" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <Button fx:id="tan_button" mnemonicParsing="false" onAction="#add_tan" text="Tan" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" onAction="#add_fx" text="f(x)" GridPane.columnIndex="3" />
-                        <Button fx:id="cot_button" mnemonicParsing="false" onAction="#add_cot" text="Cot" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Button mnemonicParsing="false" onAction="#add_square_root" text="√x" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Button fx:id="clear_button" mnemonicParsing="false" onAction="#clear" text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Button mnemonicParsing="false" text="Ans" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                     </children>
-                  </GridPane>
-                  <Pane prefHeight="68.0" prefWidth="232.0" VBox.vgrow="ALWAYS" />
-                  <TextField fx:id="calcOut" alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0" promptText="Result" VBox.vgrow="ALWAYS">
-                     <font>
-                        <Font size="32.0" />
-                     </font>
-                  </TextField>
-               </children>
-            </VBox>
-            <LineChart fx:id="lineGraph" createSymbols="false" legendVisible="false">
-              <xAxis>
-                <NumberAxis autoRanging="false" lowerBound="-20" side="BOTTOM" tickUnit="1" upperBound="20" />
-              </xAxis>
-              <yAxis>
-                <NumberAxis autoRanging="false" lowerBound="-20" side="LEFT" tickUnit="1" upperBound="20" />
-              </yAxis>
-               <cursor>
-                  <Cursor fx:constant="CROSSHAIR" />
-               </cursor>
-            </LineChart>
-         </items>
+         <VBox alignment="CENTER" prefHeight="398.0" prefWidth="255.0">
+            <TextField fx:id="calcIn" alignment="CENTER" onAction="#parse" prefHeight="93.0" prefWidth="232.0"
+                       promptText="Enter Calculation" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font size="24.0"/>
+               </font>
+            </TextField>
+            <CheckBox fx:id="variableValuesCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0"
+                      text="Allow variables"/>
+            <CheckBox fx:id="multipleGraphs" mnemonicParsing="false" prefHeight="18.0" prefWidth="110.0"
+                      text="Multiple Graphs"/>
+            <Pane prefHeight="37.0" prefWidth="232.0"/>
+            <GridPane gridLinesVisible="true" prefHeight="124.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+                  <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+               </rowConstraints>
+               <Button mnemonicParsing="false" onAction="#add_sin" text="Sin"/>
+               <Button mnemonicParsing="false" onAction="#add_cos" text="Cos"
+                       GridPane.columnIndex="1"/>
+               <Button mnemonicParsing="false" onAction="#add_cosec" text="Cosec"
+                       GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS"/>
+               <Button mnemonicParsing="false" onAction="#add_sec" text="Sec"
+                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+               <Button mnemonicParsing="false" onAction="#add_log" text="log()"
+                       GridPane.rowIndex="2"/>
+               <Button mnemonicParsing="false" onAction="#add_ln" text="ln()"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+               <Button mnemonicParsing="false" onAction="#add_tan" text="Tan"
+                       GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
+                       GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS"/>
+               <Button mnemonicParsing="false" onAction="#add_fx" text="f(x)" GridPane.columnIndex="3"/>
+               <Button mnemonicParsing="false" onAction="#add_cot" text="Cot"
+                       GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+               <Button mnemonicParsing="false" onAction="#add_square_root" text="√x" GridPane.columnIndex="3"
+                       GridPane.rowIndex="1"/>
+               <Button mnemonicParsing="false" onAction="#clear" text="Clear"
+                       GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+               <Button mnemonicParsing="false" text="Ans" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            </GridPane>
+            <Pane prefHeight="68.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
+               <Button fx:id="changeGraphScale" layoutX="163.0" layoutY="12.0" mnemonicParsing="false"
+                       onAction="#changeGraphScale" text="Change graph Scale"/>
+            </Pane>
+            <TextField fx:id="calcOut" alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0"
+                       promptText="Result" VBox.vgrow="ALWAYS">
+               <font>
+                  <Font size="32.0"/>
+               </font>
+            </TextField>
+         </VBox>
+         <LineChart fx:id="lineGraph" createSymbols="false" legendVisible="false">
+            <xAxis>
+               <NumberAxis fx:id="xaxis" autoRanging="false" lowerBound="-20" side="BOTTOM" tickUnit="1"
+                           upperBound="20"/>
+            </xAxis>
+            <yAxis>
+               <NumberAxis fx:id="yaxis" autoRanging="false" lowerBound="-20" side="LEFT" tickUnit="1" upperBound="20"/>
+            </yAxis>
+            <cursor>
+               <Cursor fx:constant="CROSSHAIR"/>
+            </cursor>
+         </LineChart>
       </SplitPane>
    </center>
 </BorderPane>
