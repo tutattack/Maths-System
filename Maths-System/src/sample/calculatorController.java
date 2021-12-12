@@ -73,8 +73,10 @@ public class calculatorController {
     Integer upperBound =  20;
     Integer input = 20;
 
+    //Contians the list of roots of the graph
     ArrayList<Double> answer = new ArrayList<>();
 
+    //Stores the answer of the last expression entered
     String savedAnswer;
 
     /********
