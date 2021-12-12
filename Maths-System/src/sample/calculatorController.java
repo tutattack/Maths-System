@@ -75,6 +75,8 @@ public class calculatorController {
 
     ArrayList<Double> answer = new ArrayList<>();
 
+    String savedAnswer;
+
     /********
         FXML
      ********/
@@ -127,6 +129,8 @@ public class calculatorController {
     public void clear(){
         calcIn.clear();
     }
+
+    public void add_answer() { add_text(savedAnswer);}
 
     /*************************************************************************
     Method: find_variable_value(String variableName)
@@ -284,6 +288,9 @@ public class calculatorController {
 
             //Checks to see if the user has used f(x)=
             if(Tokens[0] == T_FOFX){
+
+                //this is to get the saved answer
+                shuntYard(NR_tokens, Tokens, SymbolTable, identifierList, false);
 
                 /*
                 Checks to see if there are more than one variable
@@ -972,7 +979,10 @@ public class calculatorController {
             return Double.parseDouble(rpn.get(0));
         }
 
+        savedAnswer = rpn.peek();
+        System.out.println(savedAnswer);
         calcOut.setText(rpn.pop());
+
 
         return 0;
 
