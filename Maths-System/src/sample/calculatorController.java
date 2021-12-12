@@ -79,6 +79,9 @@ public class calculatorController {
     //Stores the answer of the last expression entered
     String savedAnswer;
 
+    //Used to change the amount of values calculated when graphing
+    double recursiveScale = 20;
+
     /********
         FXML
      ********/
@@ -96,6 +99,8 @@ public class calculatorController {
     private CheckBox variableValuesCheckBox;
     @FXML
     private CheckBox multipleGraphs;
+    @FXML
+    private CheckBox trigGraph;
 
 
     /************************************************************
@@ -236,6 +241,34 @@ public class calculatorController {
         xaxis.setUpperBound(upperBound);
         yaxis.setLowerBound(lowerBound);
         yaxis.setUpperBound(upperBound);
+
+        recursiveScale = upperBound;
+
+
+    }
+
+    /*********************************************************
+     Method: trigGraphScale()
+     Description:
+            Method to change the scale of the graph from
+            to suit the graphing of trig.
+
+     ********************************************************/
+    public void trigGraphScale(){
+        if(trigGraph.isSelected()){
+            xaxis.setLowerBound(-360);
+            xaxis.setUpperBound(360);
+            yaxis.setLowerBound(-1);
+            yaxis.setUpperBound(1);
+
+            recursiveScale = 360;
+        } else{
+            xaxis.setLowerBound(lowerBound);
+            xaxis.setUpperBound(upperBound);
+            yaxis.setLowerBound(lowerBound);
+            yaxis.setUpperBound(upperBound);
+            recursiveScale = 20;
+        }
     }
 
     /*********************************************************************
@@ -315,7 +348,7 @@ public class calculatorController {
                     by 0.02 between -20 and 20. This is to get values to plot onto
                     the graph.
                      */
-                    for (double i = -20; i <= 20; i += 0.02) {
+                    for (double i = -recursiveScale; i <= recursiveScale; i += (recursiveScale / 100)) {
 
                         i = Math.round(i*100.0)/100.0;
                         //System.out.println(i);

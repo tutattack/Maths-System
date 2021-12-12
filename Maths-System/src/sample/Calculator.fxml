@@ -54,6 +54,7 @@
             </GridPane>
             <Pane prefHeight="68.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
                <Button fx:id="changeGraphScale" layoutX="163.0" layoutY="12.0" mnemonicParsing="false" onAction="#changeGraphScale" text="Change graph Scale" />
+               <CheckBox fx:id="trigGraph" layoutX="66.0" layoutY="28.0" mnemonicParsing="false" onAction="#trigGraphScale" text="Trig graph scale" />
             </Pane>
             <TextField fx:id="calcOut" alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0" promptText="Result" VBox.vgrow="ALWAYS">
                <font>
