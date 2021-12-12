@@ -52,10 +52,12 @@
                <Button mnemonicParsing="false" onAction="#clear" text="Clear" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                <Button mnemonicParsing="false" onAction="#add_answer" text="Ans" GridPane.columnIndex="3" GridPane.rowIndex="2" />
             </GridPane>
-            <Pane prefHeight="68.0" prefWidth="232.0" VBox.vgrow="ALWAYS">
-               <Button fx:id="changeGraphScale" layoutX="163.0" layoutY="12.0" mnemonicParsing="false" onAction="#changeGraphScale" text="Change graph Scale" />
-               <CheckBox fx:id="trigGraph" layoutX="66.0" layoutY="28.0" mnemonicParsing="false" onAction="#trigGraphScale" text="Trig graph scale" />
-            </Pane>
+            <VBox alignment="CENTER" prefHeight="90.0" prefWidth="296.0">
+               <children>
+                  <Button fx:id="changeGraphScale" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#changeGraphScale" prefHeight="25.0" prefWidth="141.0" text="Change graph Scale" textAlignment="CENTER" VBox.vgrow="ALWAYS" />
+                  <CheckBox fx:id="trigGraph" mnemonicParsing="false" onAction="#trigGraphScale" prefHeight="29.0" prefWidth="140.0" text="Trig graph scale" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
             <TextField fx:id="calcOut" alignment="CENTER" editable="false" prefHeight="132.0" prefWidth="232.0" promptText="Result" VBox.vgrow="ALWAYS">
                <font>
                   <Font size="32.0" />

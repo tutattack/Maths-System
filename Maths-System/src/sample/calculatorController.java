@@ -140,6 +140,21 @@ public class calculatorController {
     public void add_answer() { add_text(savedAnswer);}
 
     /*************************************************************************
+     Method: error_message(String message)
+
+     Description:
+     Creates an error message which is displayed to the user
+
+     *************************************************************************/
+
+    public void error_message(String message){
+        Alert.AlertType type = Alert.AlertType.ERROR;
+        Alert alert = new Alert(type,message);
+        alert.getDialogPane().setHeaderText("ERROR");
+        alert.showAndWait();
+    }
+
+    /*************************************************************************
     Method: find_variable_value(String variableName)
 
     Description:
@@ -389,6 +404,7 @@ public class calculatorController {
 
 
         } else{
+            error_message("PARSING FAILED");
             System.out.println("PARSING FAILED");   //Parsing failed
         }
     }
