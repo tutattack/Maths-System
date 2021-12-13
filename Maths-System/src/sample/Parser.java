@@ -74,30 +74,15 @@ class Parse extends Lexer{
         lookahead = -1;
         ret = 1;
 
-        //counts the number of parenthesis tokens
-        int count =0;
-        for (int x: Tokens){
-            if (x==1){
-                count+=1;
-            }
-            if (x==2){
-                count-=1;
-            }
-        }
+        //loop through each token until you reach the end
+        //return 0 if any tokens cannot be parsed
 
-        //run expression method if there are matched parenthesis
-        if (count==0) {
-            expression(0);
-            if (currentToken < NR_tokens) {
-                System.out.print("SYNTAX ERROR- Token: " + currentToken + " of value: " + SymbolTable[currentToken] + "\n");
-                ret = 0;
-            }
-        }
-        //if the there is an imbalance in the number of parenthesis
-        //throw an error message and return 0
-        else {
+        expression(0);
+        if (currentToken < NR_tokens) {
+            System.out.print("SYNTAX ERROR- Token: " + currentToken + " of value: " + SymbolTable[currentToken] + "\n");
             ret = 0;
         }
+
 
         //returns 1 if parsing successful
         //return 0 if parsing has failed
