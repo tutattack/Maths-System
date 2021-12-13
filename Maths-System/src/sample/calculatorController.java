@@ -23,9 +23,11 @@ import static sample.Lexer.*;
     Controls the gui of the program including input and output.
 
  Methods:
+    error_message
     find_variable_value
     validateVariableValue
     changeGraphScale
+    trigGraphScale
     parse
     calculate
     getOperator
@@ -273,8 +275,8 @@ public class calculatorController {
         if(trigGraph.isSelected()){
             xaxis.setLowerBound(-360);
             xaxis.setUpperBound(360);
-            yaxis.setLowerBound(-1);
-            yaxis.setUpperBound(1);
+            yaxis.setLowerBound(-2);
+            yaxis.setUpperBound(2);
 
             recursiveScale = 360;
         } else{
